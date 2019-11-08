@@ -15,16 +15,22 @@ type alias Flags =
 
 
 type alias Model =
-    {}
+    { user : String
+    , email : String
+    }
 
 
 type Msg
-    = NoOp
+    = UpdateUser String
+    | UpdateEmail String
+    | NoUpdate
 
 
 init : { navigate : Route -> Cmd msg } -> Flags -> ( Model, Cmd Msg, Cmd msg )
 init _ _ =
-    ( {}
+    ( { user = "Joe"
+      , email = "joe@foo.com"
+      }
     , Cmd.none
     , Cmd.none
     )
@@ -33,9 +39,14 @@ init _ _ =
 update : { navigate : Route -> Cmd msg } -> Msg -> Model -> ( Model, Cmd Msg, Cmd msg )
 update _ msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none, Cmd.none )
+        UpdateUser username ->
+            ( { model | user = username }, Cmd.none, Cmd.none )
 
+        UpdateEmail email ->
+            ( { model | email = email }, Cmd.none, Cmd.none )
+
+        NoUpdate ->
+            ( model, Cmd.none, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
