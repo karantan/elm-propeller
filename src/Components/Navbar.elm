@@ -13,6 +13,7 @@ view =
         (List.map viewLink
             [ ( "homepage", "/" )
             , ( "docs", "/docs" )
+            , ( "Sing In", "/sign-in" )
             ]
         )
 

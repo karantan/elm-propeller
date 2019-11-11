@@ -7,6 +7,7 @@ module Global exposing
     , update
     )
 
+import Credentials exposing (Credentials)
 import Generated.Route exposing (Route)
 
 
@@ -15,21 +16,22 @@ type alias Flags =
 
 
 type alias Model =
-    { user : String
-    , email : String
+    { favoriteColor : String
+    , credentials : Credentials
     }
 
 
 type Msg
-    = UpdateUser String
-    | UpdateEmail String
+    = UpdateColor String
+    | SetUsernamePassword String String
+    | SetCredentials Credentials
     | NoUpdate
 
 
 init : { navigate : Route -> Cmd msg } -> Flags -> ( Model, Cmd Msg, Cmd msg )
 init _ _ =
-    ( { user = "Joe"
-      , email = "joe@foo.com"
+    ( { favoriteColor = "Red"
+      , credentials = Credentials.empty "http://localhost:8080/api/v1"
       }
     , Cmd.none
     , Cmd.none
@@ -37,16 +39,33 @@ init _ _ =
 
 
 update : { navigate : Route -> Cmd msg } -> Msg -> Model -> ( Model, Cmd Msg, Cmd msg )
-update _ msg model =
+update app msg model =
     case msg of
-        UpdateUser username ->
-            ( { model | user = username }, Cmd.none, Cmd.none )
+        UpdateColor color ->
+            ( { model | favoriteColor = color }, Cmd.none, Cmd.none )
 
-        UpdateEmail email ->
-            ( { model | email = email }, Cmd.none, Cmd.none )
+        SetUsernamePassword username password ->
+            let
+                credentials1 =
+                    Credentials.setUsername username model.credentials
+
+                credentials2 =
+                    Credentials.setPassword password credentials1
+            in
+            ( { model | credentials = credentials2 }
+            , Cmd.none
+            , Cmd.none
+            )
+
+        SetCredentials credentials ->
+            ( { model | credentials = credentials }
+            , Cmd.none
+            , Cmd.none
+            )
 
         NoUpdate ->
             ( model, Cmd.none, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =

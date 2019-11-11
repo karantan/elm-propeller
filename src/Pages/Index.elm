@@ -13,15 +13,12 @@ import Utils.Cmd
 
 
 type alias Model =
-    { username : String
-    , email : String
-    }
+    { color : String }
 
 
 type Msg
     = GlobalMsg Global.Msg
-    | SetUsername String
-    | SetEmail String
+    | SetColor String
 
 
 page =
@@ -36,14 +33,12 @@ page =
 
 title : Global.Model -> Model -> String
 title global _ =
-    global.user
+    global.favoriteColor
 
 
 init : Global.Model -> () -> ( Model, Cmd Msg, Cmd Global.Msg )
 init global _ =
-    ( { username = global.user
-      , email = global.email
-      }
+    ( { color = global.favoriteColor }
     , Cmd.none
     , Cmd.none
     )
@@ -55,11 +50,8 @@ update _ msg model =
         GlobalMsg globalMsg ->
             ( model, Cmd.none, Utils.Cmd.send globalMsg )
 
-        SetEmail email ->
-            ( { model | email = email }, Cmd.none, Cmd.none )
-
-        SetUsername username ->
-            ( { model | username = username }, Cmd.none, Cmd.none )
+        SetColor color ->
+            ( { model | color = color }, Cmd.none, Cmd.none )
 
 
 view : Global.Model -> Model -> Html Msg
@@ -73,14 +65,11 @@ view global model =
             , text " and see what happens!"
             ]
         , p []
-            [ text "username is set to "
-            , text global.user
+            [ text "Favorite Color is set to "
+            , text global.favoriteColor
             ]
-        , p [] [ input [ placeholder "New Username", onInput SetUsername ] [ text model.username ] ]
-        , button [ onClick (GlobalMsg (Global.UpdateUser model.username)) ] [ text "Save Username" ]
-        , p [] [ text "email is set to ", text global.email ]
-        , p [] [ input [ placeholder "New Email", onInput SetEmail ] [ text model.email ] ]
-        , button [ onClick (GlobalMsg (Global.UpdateEmail model.email)) ] [ text "Save Email" ]
+        , p [] [ input [ placeholder "New Favorite Color", onInput SetColor ] [ text model.color ] ]
+        , button [ onClick (GlobalMsg (Global.UpdateColor model.color)) ] [ text "Save" ]
         ]
 
 
